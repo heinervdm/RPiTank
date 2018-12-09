@@ -70,10 +70,14 @@
 					if (y < -255) y = -255;
 					left = y;
 					right = y;
-					if (x < 0 && y > 0) right = y - x;
-					if (x > 0 && y > 0) left = y - x;
-					if (x < 0 && y < 0) left = y + x;
-					if (x > 0 && y < 0) right = y + x;
+					if (x < 0 && y > 0) left = y + x;
+					if (x > 0 && y > 0) right = y - x;
+					if (x < 0 && y < 0) right = y - x;
+					if (x > 0 && y < 0) left = y + x;
+					if (left > 255) left = 255;
+					if (left < -255) left = -255;
+					if (right > 255) right = 255;
+					if (right < -255) right = -255;
 					var xhttp = new XMLHttpRequest();
 					xhttp.open("GET", "go?l="+left+"&r="+right, true);
 					xhttp.send();
