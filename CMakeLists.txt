@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 project(rpitank)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 find_package(Qt5Core CONFIG REQUIRED)
 find_package(Qt5Network CONFIG REQUIRED)
