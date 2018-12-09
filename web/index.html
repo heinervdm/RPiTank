@@ -68,12 +68,12 @@
 					if (x < -255) x = -255;
 					if (y > 255) y = 255;
 					if (y < -255) y = -255;
-					left = x;
-					right = x;
-					if (y < 0 && x > 0) right = x - y;
-					if (y > 0 && x > 0) left = x - y;
-					if (y < 0 && x < 0) left = x + y;
-					if (y > 0 && x < 0) right = x + y;
+					left = y;
+					right = y;
+					if (x < 0 && y > 0) right = y - x;
+					if (x > 0 && y > 0) left = y - x;
+					if (x < 0 && y < 0) left = y + x;
+					if (x > 0 && y < 0) right = y + x;
 					var xhttp = new XMLHttpRequest();
 					xhttp.open("GET", "go?l="+left+"&r="+right, true);
 					xhttp.send();
