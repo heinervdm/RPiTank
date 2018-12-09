@@ -130,7 +130,15 @@ void HttpProvider::handleGet(QTcpSocket * socket, QString path) {
 		QTextStream in(&f);
 		QString data = in.readAll();
 		if (!socket->localAddress().isNull()) {
-			data.replace("localhost",socket->localAddress().toString());
+			bool conversionOK = false;
+			QHostAddress ip4Address(socket->localAddress().toIPv4Address(&conversionOK));
+			QString ipString;
+			if (conversionOK) {
+				ipString = ip4Address.toString();
+			} else {
+				ipString = socket->localAddress().toString();
+			}
+			data.replace("localhost",ipString);
 		}
 		socket->write(QString("HTTP/1.1 200 OK\nContent-Length: %1\nContent-Type: %2\nConnection: Closed\n\n%4\n").arg(QString::number(f.size()+1)).arg("text/html; charset=iso-8859-1").arg(data).toLatin1());
 		socket->waitForBytesWritten(1000);
