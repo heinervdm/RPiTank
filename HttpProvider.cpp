@@ -24,14 +24,7 @@
 #include <QDirIterator>
 
 HttpProvider::HttpProvider(int port) {
-	tcpServer = new QTcpServer();
-	connect(tcpServer, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
-	tcpServer->listen(QHostAddress::Any, port);
 
-	timeoutTimer = new QTimer();
-	connect(timeoutTimer, SIGNAL(timeout()), this, SLOT(onTimeout()));
-	timeoutTimer->setInterval(1000);
-	timeoutTimer->start();
 }
 
 HttpProvider::~HttpProvider() {
@@ -41,10 +34,29 @@ HttpProvider::~HttpProvider() {
 	}
 }
 
+void HttpProvider::init() {
+	if (!tcpServer) {
+		tcpServer = new QTcpServer();
+		connect(tcpServer, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
+		tcpServer->listen(QHostAddress::Any, port);
+	}
+	if (!timeoutTimer) {
+		timeoutTimer = new QTimer();
+		connect(timeoutTimer, SIGNAL(timeout()), this, SLOT(onTimeout()));
+		timeoutTimer->setInterval(1000);
+		timeoutTimer->start();
+	}
+}
+
 void HttpProvider::onNewConnection() {
+	if (!tcpServer) {
+		return;
+	}
 	QTcpSocket *socket = tcpServer->nextPendingConnection();
 	while (socket) {
-		timeoutTimer->start();
+		if (timeoutTimer) {
+			timeoutTimer->start();
+		}
 		bool header = true;
 		QByteArray path;
 		QByteArray host;
@@ -129,7 +141,7 @@ void HttpProvider::handleGet(QTcpSocket * socket, QString path) {
 	if (f.open(QIODevice::ReadOnly | QFile::Text)) {
 		QTextStream in(&f);
 		QString data = in.readAll();
-		if (!socket->localAddress().isNull()) {
+		if (data.contains("localhost") && !socket->localAddress().isNull()) {
 			bool conversionOK = false;
 			QHostAddress ip4Address(socket->localAddress().toIPv4Address(&conversionOK));
 			QString ipString;
@@ -140,7 +152,7 @@ void HttpProvider::handleGet(QTcpSocket * socket, QString path) {
 			}
 			data.replace("localhost",ipString);
 		}
-		socket->write(QString("HTTP/1.1 200 OK\nContent-Length: %1\nContent-Type: %2\nConnection: Closed\n\n%4\n").arg(QString::number(f.size()+1)).arg("text/html; charset=iso-8859-1").arg(data).toLatin1());
+		socket->write(QString("HTTP/1.1 200 OK\nContent-Length: %1\nContent-Type: %2\nConnection: Closed\n\n%4\n").arg(QString::number(data.size()+1)).arg("text/html; charset=iso-8859-1").arg(data).toLatin1());
 		socket->waitForBytesWritten(1000);
 	} else {
 		// send Error 404

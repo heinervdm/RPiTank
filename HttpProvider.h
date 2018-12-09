@@ -34,6 +34,9 @@ HttpProvider(int port = 80);
 signals:
 	void newData(int left, int right);
 
+public slots:
+	void init();
+
 private slots:
 	void onNewConnection();
 	void onTimeout();

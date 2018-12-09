@@ -11,6 +11,7 @@ RPiTank::RPiTank(int port)
 	http = new HttpProvider(port);
 	http->moveToThread(httpThread);
 	connect(http, SIGNAL(destroyed()), httpThread, SLOT(deleteLater()));
+	connect(httpThread, SIGNAL(started()), http, SLOT(init()));
 	httpThread->start();
 
 	gpioThread = new QThread(this);
