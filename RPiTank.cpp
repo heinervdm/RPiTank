@@ -5,10 +5,10 @@
 #include <QTcpSocket>
 #include <QThread>
 
-RPiTank::RPiTank()
+RPiTank::RPiTank(int port)
 {
 	httpThread = new QThread(this);
-	http = new HttpProvider(8080);
+	http = new HttpProvider(port);
 	http->moveToThread(httpThread);
 	connect(http, SIGNAL(destroyed()), httpThread, SLOT(deleteLater()));
 	httpThread->start();

@@ -1,0 +1,10 @@
+[Unit]
+Description=A server for streaming Motion-JPEG from a video capture device
+After=network.target
+
+[Service]
+User=www-dagta
+ExecStart=/usr/bin/mjpg_streamer -i input_raspicam.so -o 'output_http.so -w /usr/share/mjpg_streamer/www'
+
+[Install]
+WantedBy=multi-user.target

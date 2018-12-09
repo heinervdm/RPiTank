@@ -1,0 +1,9 @@
+[Unit]
+Description=RPiTank control server
+After=mjpg_streamer.service
+
+[Service]
+ExecStart=/usr/bin/rpitank
+
+[Install]
+WantedBy=multi-user.target

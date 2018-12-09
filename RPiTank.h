@@ -12,7 +12,7 @@ class RPiTank : public QObject
 	Q_OBJECT
 
 public:
-	RPiTank();
+	RPiTank(int port = 80);
 	virtual ~RPiTank();
 
 private:
