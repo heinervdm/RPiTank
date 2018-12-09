@@ -48,6 +48,7 @@ private:
 private:
 	QTcpServer *tcpServer;
 	QTimer *timeoutTimer;
+	int httpPort;
 };
 
 #endif // HTTPPROVIDER_H

@@ -23,7 +23,7 @@
 #include <QFile>
 #include <QDirIterator>
 
-HttpProvider::HttpProvider(int port) {
+HttpProvider::HttpProvider(int port) : httpPort(port){
 
 }
 
@@ -38,7 +38,7 @@ void HttpProvider::init() {
 	if (!tcpServer) {
 		tcpServer = new QTcpServer();
 		connect(tcpServer, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
-		tcpServer->listen(QHostAddress::Any, port);
+		tcpServer->listen(QHostAddress::Any, httpPort);
 	}
 	if (!timeoutTimer) {
 		timeoutTimer = new QTimer();
