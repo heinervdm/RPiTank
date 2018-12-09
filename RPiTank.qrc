@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+	<qresource>
+		<file>web/index.html</file>
+		<file>web/virtualjoystick.js</file>
+	</qresource>
+</RCC> 

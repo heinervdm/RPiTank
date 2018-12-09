@@ -1,0 +1,83 @@
+<html>
+	<head>
+		<title>RPiTank</title>
+		<style>
+		body {
+			overflow	: hidden;
+			padding		: 0;
+			margin		: 0;
+			background-color: #BBB;
+		}
+		#container {
+			float		: right;
+			width		: 30%;
+			height		: 90%;
+			overflow	: hidden;
+			padding		: 0;
+			margin		: 0;
+			-webkit-user-select	: none;
+			-moz-user-select	: none;
+			background-color: #00B;
+		}
+		#video {
+			float		: left;
+			width		: 70%;
+			height		: 90%;
+			background-color: #B00;
+		}
+		</style>
+	</head>
+	<body>
+		<div id="video">
+			<img src="http://localhost:8080/?action=stream" />
+		</div>
+		<div id="container">
+			
+		</div>
+		<br style="break:both;">
+		<div id="result">
+		</div>
+		<script src="virtualjoystick.js"></script>
+		<script>
+			console.log("touchscreen is", VirtualJoystick.touchScreenAvailable() ? "available" : "not available");
+	
+			var joystick	= new VirtualJoystick({
+				container	: document.getElementById('container'),
+				mouseSupport	: true,
+			});
+			joystick.addEventListener('touchStart', function(){
+				console.log('down')
+			})
+			joystick.addEventListener('touchEnd', function(){
+				console.log('up')
+			})
+			setInterval(function(){
+				var outputEl	= document.getElementById('result');
+				outputEl.innerHTML	= '<b>Result:</b> '
+					+ ' dx:'+joystick.deltaX()
+					+ ' dy:'+joystick.deltaY()
+					+ (joystick.right()	? ' right'	: '')
+					+ (joystick.up()	? ' up'		: '')
+					+ (joystick.left()	? ' left'	: '')
+					+ (joystick.down()	? ' down' 	: '');
+					var left = 0;
+					var right = 0;
+					var x = joystick.deltaX();
+					var y = joystick.deltaY();
+					if (x > 255) x = 255;
+					if (x < -255) x = -255;
+					if (y > 255) y = 255;
+					if (y < -255) y = -255;
+					left = x;
+					right = x;
+					if (y < 0 && x > 0) right = x - y;
+					if (y > 0 && x > 0) left = x - y;
+					if (y < 0 && x < 0) left = x + y;
+					if (y > 0 && x < 0) right = x + y;
+					var xhttp = new XMLHttpRequest();
+					xhttp.open("GET", "go?l="+left+"&r="+right, true);
+					xhttp.send();
+			}, 1/10 * 1000);
+		</script>
+	</body>
+</html>
