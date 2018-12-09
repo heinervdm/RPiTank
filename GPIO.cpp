@@ -18,6 +18,7 @@
 
 #include "GPIO.h"
 #include <pigpio.h>
+#include <QDebug>
 
 #define LEFT_GPIO_1 5
 #define LEFT_GPIO_2 6
